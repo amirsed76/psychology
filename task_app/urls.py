@@ -12,5 +12,7 @@ urlpatterns = [
     path("help/question_text", views.GetQuestionTextAPIView.as_view()),
     path("help/how_do_task", views.GetHowDoTaskAPIView.as_view()),
     path("register", views.TaskRegisterCreateAPIView.as_view()),
-    path("generate", views.TaskInitInfoAPIView.as_view())
+    path("generate", views.TaskInitInfoAPIView.as_view()),
+    path("training_generate", views.TaskTrainingInitInfoAPIView.as_view()),
+    path("apply",views.ApplyTaskCreateAPIView.as_view())
 ]

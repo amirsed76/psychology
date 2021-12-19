@@ -90,6 +90,20 @@ class TaskRegisterCreateAPIView(generics.CreateAPIView):
     serializer_class = serializers.TaskRegisterSerializer
 
 
+class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
+    serializer_class = serializers.TaskInfoSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        qs = models.Image.objects.all()
+        images = random.choices(list(qs), k=5)
+        images_by_repeat = images + random.choices(images, k=5)
+        random.shuffle(images_by_repeat)
+        orders = [image.id for image in images_by_repeat]
+        serializer = self.get_serializer(instance={"images": images, "orders": orders})
+
+        return Response(serializer.data)
+
+
 class TaskInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
@@ -100,3 +114,14 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
         serializer = self.get_serializer(instance={"images": images, "orders": orders})
 
         return Response(serializer.data)
+
+
+class ApplyTaskCreateAPIView(generics.CreateAPIView):
+    serializer_class = serializers.ApplyTaskSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

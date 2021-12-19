@@ -96,7 +96,7 @@ class TaskEvent(models.Model):
 
 class TaskEventImageReactionTime(models.Model):
     task_event = models.ForeignKey("TaskEvent", null=False, blank=False, on_delete=models.CASCADE)
-    Image = models.ForeignKey("Image", null=True, blank=True, on_delete=models.SET_NULL)
+    image = models.ForeignKey("Image", null=True, blank=True, on_delete=models.SET_NULL)
     reaction_time = models.PositiveIntegerField(null=True, blank=False, validators=[
         MaxValueValidator(3000),
     ])

@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import serializers
 
 from . import models, constances, error_messages
@@ -33,15 +35,14 @@ class AnswerSerializer(Serializer):
 
 class QuestionSerializer(ModelSerializer):
     next_id = serializers.SerializerMethodField("get_next_id", allow_null=True)
-    answers = AnswerSerializer(many=True,allow_null=False)
+    answers = AnswerSerializer(many=True, allow_null=False)
+
     # answers = serializers.SerializerMethodField("get_answers", allow_null=False)
 
     class Meta:
         model = models.Question
         fields = ["id", "text", "next_id", "answers"]
         read_only_fields = ["id", "text", "answers", "next_id"]
-
-
 
     def get_next_id(self, attr) -> int:
         objects = models.Question.objects.order_by("order_index")
@@ -163,3 +164,69 @@ class TaskInfoSerializer(Serializer):
 
     def create(self, validated_data):
         pass
+
+
+class ReactionTimeSerializer(ModelSerializer):
+    class Meta:
+        model = models.TaskEventImageReactionTime
+        fields = ["image", "reaction_time"]
+
+
+class ApplyTaskSerializer(ModelSerializer):
+    reaction_times = ReactionTimeSerializer(many=True, write_only=True, allow_null=False)
+    mobile_number = serializers.CharField(write_only=True, allow_null=False, allow_blank=False)
+    next_date = serializers.SerializerMethodField(method_name="get_next_date", read_only=True, allow_null=False)
+    score = serializers.SerializerMethodField(method_name="get_score", read_only=True, allow_null=False)
+    reaction_time_mean = serializers.SerializerMethodField(method_name="get_reaction_time_mean", read_only=True,
+                                                           allow_null=False)
+
+    class Meta:
+        model = models.TaskEvent
+        fields = ["mobile_number", "reaction_times", "next_date", "score", "reaction_time_mean"]
+
+    @staticmethod
+    def validate_mobile_number(mobile_number):
+        if not models.Participant.objects.filter(mobile_number=mobile_number).exists():
+            raise serializers.ValidationError("این شماره معتبر نمیباشد.")
+
+        return mobile_number
+
+    def validate(self, attrs):
+        participant = models.Participant.objects.get(mobile_number=attrs.pop("mobile_number"))
+        attrs["participant"] = participant
+        if models.TaskEvent.objects.filter(participant=participant).count() == 1:
+            last_event = models.TaskEvent.objects.get(participant=participant)
+            if (datetime.datetime.now().date() - last_event.date_time.date()).days < constances.TASK_DAY_DURATION:
+                raise serializers.ValidationError("موعد آزمون دوباره ی شما نرسیده است.")
+
+        return attrs
+
+    @staticmethod
+    def validate_reaction_times(reaction_times):
+        if len(reaction_times) != 50:
+            raise serializers.ValidationError("تعداد پاسخ های اعلام شده درست نمیباشد.")
+        return reaction_times
+
+    def create(self, validated_data):
+        reaction_times = validated_data.pop("reaction_times")
+        event = super(ApplyTaskSerializer, self).create(validated_data)
+        for reaction_time in reaction_times:
+            reaction_time["task_event"] = event
+            ReactionTimeSerializer().create(reaction_time)
+
+        return event
+
+    @staticmethod
+    def get_next_date(event: models.TaskEvent) -> datetime.date:
+        participant = event.participant
+        if models.TaskEvent.objects.filter(participant=participant).count() == 1:
+            return (event.date_time + datetime.timedelta(days=constances.TASK_DAY_DURATION)).date()
+
+        else:
+            return None
+
+    def get_score(self, event: models.TaskEvent) -> int:
+        return 75
+
+    def get_reaction_time_mean(self, event) -> int:
+        return 1000
