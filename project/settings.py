@@ -24,13 +24,12 @@ SECRET_KEY = 'django-insecure-bubv_xf(b-v&*d9gbphee5(cukr*umt@my%vuh7f&cb6n&*c6z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","192.168.43.123"]
+ALLOWED_HOSTS = ["127.0.0.1", "192.168.43.123", "5.160.1.186"]
 
 # Application definition
 
 INSTALLED_APPS = [
     'task_app',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -135,9 +134,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
-
 CORS_ALLOW_ALL_ORIGINS = True
-
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 STATIC_URL = '/static/'

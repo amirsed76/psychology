@@ -3,7 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # path('<str:room_name>/', views.room, name='room'),
     path("question", views.QuestionRetrievedAPIView.as_view()),
     path("question/<int:pk>", views.QuestionRetrievedAPIView.as_view()),
     path("participant/<str:mobile_number>/exists", views.ExistParticipant.as_view()),
@@ -14,5 +13,6 @@ urlpatterns = [
     path("register", views.TaskRegisterCreateAPIView.as_view()),
     path("generate", views.TaskInitInfoAPIView.as_view()),
     path("training_generate", views.TaskTrainingInitInfoAPIView.as_view()),
-    path("apply",views.ApplyTaskCreateAPIView.as_view())
+    path("apply",views.ApplyTaskCreateAPIView.as_view()),
+
 ]

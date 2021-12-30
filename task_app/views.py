@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from . import serializers, models, constances, image_orders
+from . import serializers, models, constances, image_orders, utils
 import random
 from rest_framework.views import APIView
 
@@ -29,8 +29,10 @@ class ExistParticipant(generics.RetrieveAPIView):
 
     def get_object(self):
         participant = None
+        task_date = None
         try:
             participant = super(ExistParticipant, self).get_object()
+            task_date = utils.get_task_date(participant=participant)
             is_exist = True
 
             if participant.health is None:
@@ -43,7 +45,7 @@ class ExistParticipant(generics.RetrieveAPIView):
 
         if not is_exist and participant is not None:
             participant.delete()
-        return {"is_exist": is_exist}
+        return {"is_exist": is_exist, "task_date": task_date}
 
 
 class GetHealthQuestionAPIView(generics.RetrieveAPIView):
@@ -94,8 +96,8 @@ class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        qs = models.Image.objects.all()
-        images = random.choices(list(qs), k=5)
+        qs = models.Image.objects.all()  # TODO  select for all categories
+        images = random.sample(list(qs), k=5)
         images_by_repeat = images + random.choices(images, k=5)
         random.shuffle(images_by_repeat)
         orders = [image.id for image in images_by_repeat]
@@ -109,7 +111,7 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         qs = models.Image.objects.all()
-        images = random.choices(list(qs), k=25)
+        images = random.sample(list(qs), k=25)
         orders = image_orders.make_order(order=image_orders.get_random_order(), ids=[image.id for image in images])
         serializer = self.get_serializer(instance={"images": images, "orders": orders})
 

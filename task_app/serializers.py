@@ -2,7 +2,7 @@ import datetime
 
 from rest_framework import serializers
 
-from . import models, constances, error_messages
+from . import models, constances, error_messages, utils
 from typing import List
 
 
@@ -56,6 +56,7 @@ class QuestionSerializer(ModelSerializer):
 
 class IsExistParticipantSerializer(Serializer):
     is_exist = serializers.BooleanField(default=False, allow_null=False)
+    task_date = serializers.DateField(allow_null=False)
 
     def update(self, instance, validated_data):
         pass
@@ -179,10 +180,11 @@ class ApplyTaskSerializer(ModelSerializer):
     score = serializers.SerializerMethodField(method_name="get_score", read_only=True, allow_null=False)
     reaction_time_mean = serializers.SerializerMethodField(method_name="get_reaction_time_mean", read_only=True,
                                                            allow_null=False)
+    text = serializers.SerializerMethodField(method_name="get_text", read_only=TaskRegisterSerializer, allow_null=False)
 
     class Meta:
         model = models.TaskEvent
-        fields = ["mobile_number", "reaction_times", "next_date", "score", "reaction_time_mean"]
+        fields = ["mobile_number", "reaction_times", "next_date", "score", "reaction_time_mean", "text"]
 
     @staticmethod
     def validate_mobile_number(mobile_number):
@@ -194,10 +196,8 @@ class ApplyTaskSerializer(ModelSerializer):
     def validate(self, attrs):
         participant = models.Participant.objects.get(mobile_number=attrs.pop("mobile_number"))
         attrs["participant"] = participant
-        if models.TaskEvent.objects.filter(participant=participant).count() == 1:
-            last_event = models.TaskEvent.objects.get(participant=participant)
-            if (datetime.datetime.now().date() - last_event.date_time.date()).days < constances.TASK_DAY_DURATION:
-                raise serializers.ValidationError("موعد آزمون دوباره ی شما نرسیده است.")
+        if not utils.can_do_task(participant=participant):
+            raise serializers.ValidationError("موعد آزمون دوباره ی شما نرسیده است.")
 
         return attrs
 
@@ -230,3 +230,6 @@ class ApplyTaskSerializer(ModelSerializer):
 
     def get_reaction_time_mean(self, event) -> int:
         return 1000
+
+    def get_text(self, event):
+        return constances.APPRECIATION
