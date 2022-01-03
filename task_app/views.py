@@ -66,11 +66,11 @@ class GetTermAPIView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
-class GetQuestionTextAPIView(generics.RetrieveAPIView):
+class GetFirstPageTextAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TermSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        instance = {"text": constances.QUESTION_TEXT}
+        instance = {"text": constances.FIRST_PAGE}
         serializer = self.serializer_class(instance)
         return Response(serializer.data)
 
