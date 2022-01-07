@@ -252,7 +252,7 @@ class ApplyTaskSerializer(ModelSerializer):
 
     @staticmethod
     def get_reaction_time_mean(event: models.TaskEvent) -> int:
-        valid_images = [image_time for image_time in event.taskeventimagereactiontime_set.all() if
+        valid_images = [image_time.reaction_time for image_time in event.taskeventimagereactiontime_set.all() if
                         image_time.reaction_time is not None and
                         image_time.reaction_time >= 300
                         ]

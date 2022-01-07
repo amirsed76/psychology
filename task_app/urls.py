@@ -13,6 +13,6 @@ urlpatterns = [
     path("register", views.TaskRegisterCreateAPIView.as_view()),
     path("generate", views.TaskInitInfoAPIView.as_view()),
     path("training_generate", views.TaskTrainingInitInfoAPIView.as_view()),
-    path("apply",views.ApplyTaskCreateAPIView.as_view()),
+    path("apply", views.ApplyTaskCreateAPIView.as_view()),
 
 ]
