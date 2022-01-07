@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from . import models, constances, error_messages, utils
 from typing import List
+import math
 
 
 class Serializer(serializers.Serializer):
@@ -225,11 +226,39 @@ class ApplyTaskSerializer(ModelSerializer):
         else:
             return None
 
-    def get_score(self, event: models.TaskEvent) -> int:
-        return 75
+    @staticmethod
+    def get_score(event: models.TaskEvent) -> int:
+        seen = []
+        wrongs = 0
+        randomly = 0
 
-    def get_reaction_time_mean(self, event) -> int:
-        return 1000
+        for image_time in event.taskeventimagereactiontime_set:
+
+            if image_time.reaction_time is not None and image_time.reaction_time < 300:
+                randomly += 1
+
+            elif image_time.image.id not in seen and image_time.reaction_time is not None:
+                wrongs += 1
+
+            elif image_time.image.id in seen and image_time.reaction_time is None:
+                wrongs += 1
+
+        if randomly == 50:
+            return 0  # TODO raise Exception
+
+        return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
+
+    @staticmethod
+    def get_reaction_time_mean(event: models.TaskEvent) -> int:
+        valid_images = [image_time for image_time in event.taskeventimagereactiontime_set if
+                        image_time.reaction_time is not None and
+                        image_time.reaction_time >= 300
+                        ]
+
+        if len(valid_images) == 0:
+            return 0
+
+        return sum(valid_images) / len(valid_images)
 
     def get_text(self, event):
         return constances.APPRECIATION
