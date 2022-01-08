@@ -116,7 +116,7 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
         groups = random.sample(list(range(1,11)),k=3)
         images = []
         for g in groups:
-            qs = models.Image.objects.filter(category=g)
+            qs = models.Image.objects.filter(category=g).all()
             images.extend(random.sample(list(qs), k=9))
 
         random.shuffle(images)
