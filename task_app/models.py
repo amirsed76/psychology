@@ -23,7 +23,7 @@ class Participant(models.Model):
     birth_year = models.IntegerField(null=False, blank=False, validators=[
         MaxValueValidator(1410),
         MinValueValidator(1270)
-    ],default=1320)
+    ], default=1320)
     education_level = models.PositiveSmallIntegerField(null=False, blank=False, validators=[
         MaxValueValidator(5),
         MinValueValidator(1)
@@ -74,11 +74,17 @@ class ParticipantQuestionAnswer(models.Model):
 
 class Image(models.Model):
     CATEGORY = [
-        (1, "Building"),
+        (1, "sakhteman"),
         (2, "fountain"),
         (3, "furniture"),
-        (4, "Home equipment"),
-        (5, "natural")
+        (4, "kettle"),
+        (5, "landscap"),
+        (6, "spoon"),
+        (7, "tools"),
+        (8, "town"),
+        (9, "tree"),
+        (10, "flower")
+
     ]
 
     picture = models.ImageField(null=False, blank=False)

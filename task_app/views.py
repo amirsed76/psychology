@@ -98,8 +98,11 @@ class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         qs = models.Image.objects.all()  # TODO  select for all categories
         images = random.sample(list(qs), k=5)
-        images_by_repeat = images + random.choices(images, k=5)
-        random.shuffle(images_by_repeat)
+        # images_by_repeat = images + random.choices(images, k=5)
+        images_by_repeat = []
+        for idx in [0, 1, 3, 0, 4, 2, 1, 2, 0, 3]:
+            images_by_repeat.append(images[idx])
+
         orders = [image.id for image in images_by_repeat]
         serializer = self.get_serializer(instance={"images": images, "orders": orders})
 
@@ -110,8 +113,14 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        qs = models.Image.objects.all()
-        images = random.sample(list(qs), k=25)
+        groups = random.sample(list(range(1,11)),k=3)
+        images = []
+        for g in groups:
+            qs = models.Image.objects.filter(category=g)
+            images.extend(random.sample(list(qs), k=9))
+
+        random.shuffle(images)
+        images = images[:25]
         orders = image_orders.make_order(order=image_orders.get_random_order(), ids=[image.id for image in images])
         serializer = self.get_serializer(instance={"images": images, "orders": orders})
 
