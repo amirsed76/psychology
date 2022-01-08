@@ -260,7 +260,7 @@ class ApplyTaskSerializer(ModelSerializer):
         if len(valid_images) == 0:
             return 0
 
-        return sum(valid_images) / len(valid_images)
+        return int(sum(valid_images) / len(valid_images))
 
     def get_text(self, event):
         return constances.APPRECIATION
