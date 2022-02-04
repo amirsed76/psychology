@@ -66,6 +66,15 @@ class GetTermAPIView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
+class GetQuestionHelpAPIView(generics.RetrieveAPIView):
+    serializer_class = serializers.TermSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = {"text": constances.QUESTION_HELP}
+        serializer = self.serializer_class(instance)
+        return Response(serializer.data)
+
+
 class GetFirstPageTextAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TermSerializer
 
@@ -113,7 +122,7 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        groups = random.sample(list(range(1,11)),k=3)
+        groups = random.sample(list(range(1, 11)), k=3)
         images = []
         for g in groups:
             qs = models.Image.objects.filter(category=g).all()
