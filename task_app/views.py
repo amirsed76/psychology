@@ -100,6 +100,17 @@ class TaskRegisterCreateAPIView(generics.CreateAPIView):
     queryset = models.Participant.objects.all()
     serializer_class = serializers.TaskRegisterSerializer
 
+    def create(self, request, *args, **kwargs):
+        if "participant" in request.data and "mobile_number" in request.data["participant"]:
+            mobile_number = request.data["participant"]["mobile_number"]
+            models.Participant.objects.filter(mobile_number=mobile_number).delete()
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer

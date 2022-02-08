@@ -112,6 +112,9 @@ class ParticipantSerializer(ModelSerializer):
         fields = ["name", "family_name", "birth_year", "education_level", "mobile_number", "gender"]
 
 
+
+
+
 class HealthSerializer(ModelSerializer):
     class Meta:
         model = models.Health
