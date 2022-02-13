@@ -133,9 +133,12 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        groups = random.sample(list(range(1, 11)), k=3)
+        g1 = random.choice(["spoon", "tools", "kettle"])
+        g2 = random.choice(["towner", "tree", "flower"])
+        g3 = random.choice(["fountain", "furniture", "landscap"])
         images = []
-        for g in groups:
+
+        for g in [g1, g2, g3]:
             qs = models.Image.objects.filter(category=g).all()
             images.extend(random.sample(list(qs), k=9))
 
