@@ -74,22 +74,21 @@ class ParticipantQuestionAnswer(models.Model):
 
 class Image(models.Model):
     CATEGORY = [
-        (1, "sakhteman"),
-        (2, "fountain"),
-        (3, "furniture"),
-        (4, "kettle"),
-        (5, "landscap"),
-        (6, "spoon"),
-        (7, "tools"),
-        (8, "town"),
-        (9, "tree"),
-        (10, "flower")
+        ("towner", "towner"),
+        ("fountain", "fountain"),
+        ("furniture", "furniture"),
+        ("kettle", "kettle"),
+        ("landscap", "landscap"),
+        ("spoon", "spoon"),
+        ("tools", "tools"),
+        ("tree", "tree"),
+        ("flower", "flower")
 
     ]
 
     picture = models.ImageField(null=False, blank=False)
     introduction = models.TextField(null=True, blank=True)
-    category = models.PositiveSmallIntegerField(null=False, blank=False, choices=CATEGORY, default=1)
+    category = models.CharField(null=False, blank=False, choices=CATEGORY, default="towner",max_length=10)
 
     def __str__(self):
         return f"{self.id} {self.introduction}"
