@@ -70,6 +70,7 @@ class GetHealthQuestionSerializer(Serializer):
     get_covid_19 = serializers.CharField()
     get_drug = serializers.CharField()
     mental_disorder = serializers.CharField(allow_null=False, allow_blank=False)
+    get_medicine = serializers.CharField()
 
     def update(self, instance, validated_data):
         pass
@@ -112,13 +113,10 @@ class ParticipantSerializer(ModelSerializer):
         fields = ["name", "family_name", "birth_year", "education_level", "mobile_number", "gender"]
 
 
-
-
-
 class HealthSerializer(ModelSerializer):
     class Meta:
         model = models.Health
-        fields = ["get_covid_19", "get_drug", "mental_disorder"]
+        fields = ["get_covid_19", "get_drug", "mental_disorder", "get_medicine"]
 
 
 class ParticipantQuestionAnswerSerializer(ModelSerializer):

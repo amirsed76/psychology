@@ -44,6 +44,7 @@ class Health(models.Model):
     ])
     get_drug = models.BooleanField(null=False, blank=False)
     mental_disorder = models.TextField(null=False, blank=True)
+    get_medicine = models.BooleanField(null=False, blank=False,default=False)
 
     def __str__(self):
         return f"{self.participant}"
