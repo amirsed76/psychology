@@ -44,7 +44,7 @@ class Health(models.Model):
     ])
     get_drug = models.BooleanField(null=False, blank=False)
     mental_disorder = models.TextField(null=False, blank=True)
-    get_medicine = models.BooleanField(null=False, blank=False,default=False)
+    get_medicine = models.BooleanField(null=False, blank=False, default=False)
 
     def __str__(self):
         return f"{self.participant}"
@@ -89,10 +89,10 @@ class Image(models.Model):
 
     picture = models.ImageField(null=False, blank=False)
     introduction = models.TextField(null=True, blank=True)
-    category = models.CharField(null=False, blank=False, choices=CATEGORY, default="towner",max_length=10)
+    category = models.CharField(null=False, blank=False, choices=CATEGORY, default="towner", max_length=10)
 
     def __str__(self):
-        return f"{self.id} {self.introduction}"
+        return f"{self.id} {self.category}  {self.picture}"
 
 
 class TaskEvent(models.Model):

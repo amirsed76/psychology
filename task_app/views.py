@@ -133,7 +133,7 @@ class TaskInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        g1 = random.choice(["spoon", "tools", "kettle"])
+        g1 = random.choice(["spoon", "tools"])
         g2 = random.choice(["towner", "tree", "flower"])
         g3 = random.choice(["fountain", "furniture", "landscap"])
         images = []
