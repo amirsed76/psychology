@@ -117,10 +117,10 @@ class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         qs = models.Image.objects.all()  # TODO  select for all categories
-        images = random.sample(list(qs), k=5)
+        images = random.sample(list(qs), k=7)
         # images_by_repeat = images + random.choices(images, k=5)
         images_by_repeat = []
-        for idx in [0, 1, 3, 0, 4, 2, 1, 2, 0, 3]:
+        for idx in [0, 1, 5, 3, 5, 0, 4, 2, 1, 2, 6, 0, 6, 3, 5]:
             images_by_repeat.append(images[idx])
 
         orders = [image.id for image in images_by_repeat]
