@@ -116,9 +116,8 @@ class TaskTrainingInitInfoAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.TaskInfoSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        qs = models.Image.objects.all()  # TODO  select for all categories
-        images = random.sample(list(qs), k=7)
-        # images_by_repeat = images + random.choices(images, k=5)
+        qs = models.Image.objects.filter(category="test")  # TODO  select for all categories
+        images = list(qs)
         images_by_repeat = []
         for idx in [0, 1, 5, 3, 5, 0, 4, 2, 1, 2, 6, 0, 6, 3, 5]:
             images_by_repeat.append(images[idx])

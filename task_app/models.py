@@ -83,7 +83,8 @@ class Image(models.Model):
         ("spoon", "spoon"),
         ("tools", "tools"),
         ("tree", "tree"),
-        ("flower", "flower")
+        ("flower", "flower"),
+        ("test", "test")
 
     ]
 

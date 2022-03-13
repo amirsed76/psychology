@@ -269,4 +269,4 @@ class ApplyTaskSerializer(ModelSerializer):
         return 10 * len(questions) - sum([question.answer for question in questions])
 
     def get_text(self, event):
-        return constances.APPRECIATION + f"\n\n\n <h2>  نمره‌ی کسب شده از حافظه‌ روزمره شما: {self.get_questions_score(event)}</h2> "
+        return constances.APPRECIATION + f"\n\n\n  نمره‌ی کسب شده از حافظه‌ روزمره شما: {self.get_questions_score(event)}"
