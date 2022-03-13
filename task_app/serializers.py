@@ -263,5 +263,10 @@ class ApplyTaskSerializer(ModelSerializer):
 
         return int(sum(valid_images) / len(valid_images))
 
+    def get_questions_score(self, event):
+        participant = event.participant
+        questions = models.ParticipantQuestionAnswer.objects.filter(participant=participant)
+        return 10 * len(questions) - sum([question.answer for question in questions])
+
     def get_text(self, event):
-        return constances.APPRECIATION
+        return constances.APPRECIATION + f"\n\n\n  نمره‌ی کسب شده از حافظه‌ روزمره شما  \n {self.get_questions_score(event)}"
