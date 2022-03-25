@@ -229,27 +229,7 @@ class ApplyTaskSerializer(ModelSerializer):
 
     @staticmethod
     def get_score(event: models.TaskEvent) -> int:
-        seen = []
-        wrongs = 0
-        randomly = 0
-
-        for image_time in event.taskeventimagereactiontime_set.all():
-
-            if image_time.reaction_time is not None and image_time.reaction_time < 300:
-                randomly += 1
-
-            elif image_time.image.id not in seen and image_time.reaction_time is not None:
-                wrongs += 1
-
-            elif image_time.image.id in seen and image_time.reaction_time is None:
-                wrongs += 1
-
-            seen.append(image_time.image.id)
-
-        if randomly == 50:
-            return 0  # TODO raise Exception
-
-        return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
+        return event.get_score()
 
     @staticmethod
     def get_reaction_time_mean(event: models.TaskEvent) -> int:

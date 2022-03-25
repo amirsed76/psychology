@@ -35,6 +35,9 @@ class Participant(models.Model):
     def __str__(self):
         return f"{self.name} {self.family_name} {self.mobile_number}"
 
+    def event_count(self):
+        return len(list(TaskEvent.objects.filter(participant=self)))
+
 
 class Health(models.Model):
     participant = models.OneToOneField("Participant", null=False, blank=False, on_delete=models.CASCADE)
@@ -99,6 +102,32 @@ class Image(models.Model):
 class TaskEvent(models.Model):
     participant = models.ForeignKey("Participant", null=False, blank=False, on_delete=models.CASCADE)
     date_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
+
+    def get_score(self):
+        seen = []
+        wrongs = 0
+        randomly = 0
+
+        for image_time in self.taskeventimagereactiontime_set.all():
+
+            if image_time.reaction_time is not None and image_time.reaction_time < 300:
+                randomly += 1
+
+            elif image_time.image.id not in seen and image_time.reaction_time is not None:
+                wrongs += 1
+
+            elif image_time.image.id in seen and image_time.reaction_time is None:
+                wrongs += 1
+
+            seen.append(image_time.image.id)
+
+        if randomly == 50:
+            return 0  # TODO raise Exception
+
+        return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
+
+    def __str__(self):
+        return f"{self.participant} *** {self.participant.event_count()} *** {self.date_time}"
 
 
 class TaskEventImageReactionTime(models.Model):
