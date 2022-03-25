@@ -128,7 +128,8 @@ class TaskEvent(models.Model):
         return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
 
     def __str__(self):
-        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** {self.participant.event_count()} *** {jdatetime.datetime.fromgregorian(datetime=self.date_time).date()} *** {self.get_score()}"
+        date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
+        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** {self.participant.event_count()} *** {date.year}_{date.month}_{date.day} *** {self.get_score()}"
 
 
 class TaskEventImageReactionTime(models.Model):
