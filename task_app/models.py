@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 
 from django.core.validators import MaxValueValidator, MinValueValidator
+import jdatetime
 
 
 class ModelSer():
@@ -127,7 +128,7 @@ class TaskEvent(models.Model):
         return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
 
     def __str__(self):
-        return f"{self.participant} *** {self.participant.event_count()} *** {self.date_time}"
+        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** {self.participant.event_count()} *** {jdatetime.datetime.fromgregorian(datetime=self.date_time).date()} *** {self.get_score()}"
 
 
 class TaskEventImageReactionTime(models.Model):
