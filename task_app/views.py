@@ -90,7 +90,7 @@ class GetHowDoTaskAPIView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = {
             "text": constances.HOW_DO_TASK["text"],
-            "gif": self.request.build_absolute_uri(constances.HOW_DO_TASK["gif"])
+            "gif": None
         }
         serializer = self.serializer_class(instance)
         return Response(serializer.data)
