@@ -200,7 +200,7 @@ class ApplyTaskSerializer(ModelSerializer):
         if not models.Participant.objects.filter(mobile_number=mobile_number).exists():
             raise serializers.ValidationError("این شماره معتبر نمیباشد.")
 
-        return mobile_number
+        return utils.convert_digit(mobile_number)
 
     def validate(self, attrs):
         participant = models.Participant.objects.get(mobile_number=attrs.pop("mobile_number"))
