@@ -31,6 +31,7 @@ class ExistParticipant(generics.RetrieveAPIView):
         participant = None
         task_date = None
         try:
+            self.kwargs["mobile_number"] = utils.convert_digit(self.kwargs["mobile_number"])
             participant = super(ExistParticipant, self).get_object()
             task_date = utils.get_task_date(participant=participant)
             is_exist = True

@@ -112,6 +112,10 @@ class ParticipantSerializer(ModelSerializer):
         model = models.Participant
         fields = ["name", "family_name", "birth_year", "education_level", "mobile_number", "gender"]
 
+    @staticmethod
+    def validate_mobile_number(mobile_number):
+        return utils.convert_digit(mobile_number)
+
 
 class HealthSerializer(ModelSerializer):
     class Meta:

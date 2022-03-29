@@ -30,8 +30,8 @@ class Participant(models.Model):
         MinValueValidator(1)
     ])
     mobile_number = models.CharField(max_length=11
-                                     # , validators=[
-                                     # RegexValidator('^09[0-9]{9}$', message='شماره ی موبایل معتبر نمیباشد.')]
+                                     , validators=[
+                                     RegexValidator('^09[0-9]{9}$', message='شماره ی موبایل معتبر نمیباشد.')]
                                      , null=False, blank=False, unique=True)
     gender = models.CharField(max_length=6, choices=Gender, null=False, blank=False)
 

@@ -18,3 +18,13 @@ def get_task_date(participant):
             return last_event.date_time.date() + datetime.timedelta(days=constances.TASK_DAY_DURATION)
 
     return None
+
+
+def convert_digit(input_text):
+    intab = '۱۲۳۴۵۶۷۸۹۰١٢٣٤٥٦٧٨٩٠'
+    outtab = '12345678901234567890'
+    translation_table = str.maketrans(intab, outtab)
+    output_text = input_text.translate(translation_table)
+    return output_text
+
+
