@@ -108,13 +108,16 @@ class TaskImageSerializer(ModelSerializer):
 
 
 class ParticipantSerializer(ModelSerializer):
+    mobile_number = serializers.CharField(min_length=11, max_length=11)
+
     class Meta:
         model = models.Participant
         fields = ["name", "family_name", "birth_year", "education_level", "mobile_number", "gender"]
 
     @staticmethod
     def validate_mobile_number(mobile_number):
-        return utils.convert_digit(mobile_number)
+        english_digits = utils.convert_digit(mobile_number)
+        return english_digits
 
 
 class HealthSerializer(ModelSerializer):
