@@ -1,9 +1,13 @@
+import datetime
+
 from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 import jdatetime
+
+from task_app import constances
 
 
 class ModelSer():
@@ -31,7 +35,7 @@ class Participant(models.Model):
     ])
     mobile_number = models.CharField(max_length=11
                                      , validators=[
-                                     RegexValidator('^09[0-9]{9}$', message='شماره ی موبایل معتبر نمیباشد.')]
+            RegexValidator('^09[0-9]{9}$', message='شماره ی موبایل معتبر نمیباشد.')]
                                      , null=False, blank=False, unique=True)
     gender = models.CharField(max_length=6, choices=Gender, null=False, blank=False)
 
@@ -129,9 +133,19 @@ class TaskEvent(models.Model):
 
         return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
 
+    def get_next_date(self):
+        participant = self.participant
+        if TaskEvent.objects.filter(participant=participant).count() == 1:
+            return (self.date_time + datetime.timedelta(days=constances.TASK_DAY_DURATION)).date()
+
+        else:
+            return None
+
     def __str__(self):
         date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
-        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** {self.participant.event_count()} *** {date.year}_{date.month}_{date.day} *** {self.get_score()}"
+        event_count = self.participant.event_count()
+        next_date = self.get_next_date()
+        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** next_date = {next_date}"
 
 
 class TaskEventImageReactionTime(models.Model):

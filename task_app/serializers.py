@@ -228,12 +228,7 @@ class ApplyTaskSerializer(ModelSerializer):
 
     @staticmethod
     def get_next_date(event: models.TaskEvent) -> datetime.date:
-        participant = event.participant
-        if models.TaskEvent.objects.filter(participant=participant).count() == 1:
-            return (event.date_time + datetime.timedelta(days=constances.TASK_DAY_DURATION)).date()
-
-        else:
-            return None
+        return event.get_next_date()
 
     @staticmethod
     def get_score(event: models.TaskEvent) -> int:
