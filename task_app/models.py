@@ -144,8 +144,8 @@ class TaskEvent(models.Model):
     def __str__(self):
         date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
         event_count = self.participant.event_count()
-        next_date = self.get_next_date()
-        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** next_date = {next_date}"
+        next_date =  jdatetime.datetime.fromgregorian(datetime=self.get_next_date()).date()
+        return f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** next_date = {next_date.year}_{next_date.month}_{next_date.day}"
 
 
 class TaskEventImageReactionTime(models.Model):
