@@ -146,7 +146,7 @@ class TaskEvent(models.Model):
         event_count = self.participant.event_count()
         next_date = self.get_next_date()
         try:
-            next_date = jdatetime.datetime.fromgregorian(datetime=).date()
+            next_date = jdatetime.datetime.fromgregorian(datetime=next_date).date()
         except:
             next_date = None
         result=  f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()}"
