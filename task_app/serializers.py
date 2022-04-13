@@ -236,20 +236,11 @@ class ApplyTaskSerializer(ModelSerializer):
 
     @staticmethod
     def get_reaction_time_mean(event: models.TaskEvent) -> int:
-        valid_images = [image_time.reaction_time for image_time in event.taskeventimagereactiontime_set.all() if
-                        image_time.reaction_time is not None and
-                        image_time.reaction_time >= 300
-                        ]
+        return event.get_reaction_time_mean()
 
-        if len(valid_images) == 0:
-            return 0
-
-        return int(sum(valid_images) / len(valid_images))
-
-    def get_questions_score(self, event):
-        participant = event.participant
-        questions = models.ParticipantQuestionAnswer.objects.filter(participant=participant)
-        return 10 * len(questions) - sum([question.answer for question in questions])
+    @staticmethod
+    def get_questions_score(event):
+        return event.participant.get_questions_score()
 
     def get_text(self, event):
         return constances.APPRECIATION + f"\n\n\n  نمره‌ی کسب شده از حافظه‌ روزمره شما: {self.get_questions_score(event)}"

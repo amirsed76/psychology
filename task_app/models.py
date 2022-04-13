@@ -45,6 +45,10 @@ class Participant(models.Model):
     def event_count(self):
         return len(list(TaskEvent.objects.filter(participant=self)))
 
+    def get_questions_score(self):
+        questions = ParticipantQuestionAnswer.objects.filter(participant=self)
+        return 10 * len(questions) - sum([question.answer for question in questions])
+
 
 class Health(models.Model):
     participant = models.OneToOneField("Participant", null=False, blank=False, on_delete=models.CASCADE)
@@ -133,6 +137,17 @@ class TaskEvent(models.Model):
 
         return int(((50 - (wrongs + randomly)) / (50 - randomly)) * 100)
 
+    def get_reaction_time_mean(self) -> int:
+        valid_images = [image_time.reaction_time for image_time in self.taskeventimagereactiontime_set.all() if
+                        image_time.reaction_time is not None and
+                        image_time.reaction_time >= 300
+                        ]
+
+        if len(valid_images) == 0:
+            return 0
+
+        return int(sum(valid_images) / len(valid_images))
+
     def get_next_date(self):
         participant = self.participant
         if TaskEvent.objects.filter(participant=participant).count() == 1:
@@ -149,7 +164,7 @@ class TaskEvent(models.Model):
             next_date = jdatetime.datetime.fromgregorian(datetime=next_date).date()
         except:
             next_date = None
-        result = f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()}"
+        result = f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** sander-land={self.participant.get_questions_score()} ** reaction_time = {self.get_reaction_time_mean()} "
         if next_date is not None:
             result += f"** next_date ={next_date.year}-{next_date.month}-{next_date.day}"
 
