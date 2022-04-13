@@ -114,6 +114,19 @@ class TaskEvent(models.Model):
     participant = models.ForeignKey("Participant", null=False, blank=False, on_delete=models.CASCADE)
     date_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
 
+    @property
+    def score(self):
+        return self.get_score()
+
+
+    @property
+    def reaction_time(self):
+        return self.get_reaction_time_mean()
+
+    @property
+    def event_count(self):
+        return self.participant.event_count()
+
     def get_score(self):
         seen = []
         wrongs = 0
@@ -155,21 +168,43 @@ class TaskEvent(models.Model):
 
         else:
             return None
-
-    def __str__(self):
-        date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
-        event_count = self.participant.event_count()
+    @property
+    def jalali_next_date(self):
         next_date = self.get_next_date()
         try:
             next_date = jdatetime.datetime.fromgregorian(datetime=next_date).date()
         except:
             next_date = None
-        result = f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** sander-land={self.participant.get_questions_score()} ** reaction_time = {self.get_reaction_time_mean()} "
+
         if next_date is not None:
-            result += f"** next_date ={next_date.year}-{next_date.month}-{next_date.day}"
+            next_date = f"{next_date.year}-{next_date.month}-{next_date.day}"
 
-        return result
+        return next_date
 
+    @property
+    def jalali_date(self):
+        date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
+        return f"{date.year}_{date.month}_{date.day}"
+
+    @property
+    def sanderland_score(self):
+        return self.participant.get_questions_score()
+
+
+    def __str__(self):
+        # date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
+        # event_count = self.participant.event_count()
+        # next_date = self.get_next_date()
+        # try:
+        #     next_date = jdatetime.datetime.fromgregorian(datetime=next_date).date()
+        # except:
+        #     next_date = None
+        # result = f"{self.participant.name} {self.participant.family_name}*** {self.participant.mobile_number} *** event_count = {event_count} *** date = {date.year}_{date.month}_{date.day} *** score= {self.get_score()} ** sander-land={self.participant.get_questions_score()} ** reaction_time = {self.get_reaction_time_mean()} "
+        # if next_date is not None:
+        #     result += f"** next_date ={next_date.year}-{next_date.month}-{next_date.day}"
+        #
+        # return result
+        return self.id
 
 class TaskEventImageReactionTime(models.Model):
     task_event = models.ForeignKey("TaskEvent", null=False, blank=False, on_delete=models.CASCADE)

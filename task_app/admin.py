@@ -16,6 +16,10 @@ class ParticipantAdmin(admin.ModelAdmin):
 
 
 class TaskEventAdmin(admin.ModelAdmin):  # TODO show date
+    list_display = (
+        'participant', "jalali_date", "score", "sanderland_score", "reaction_time", "event_count", "jalali_next_date")
+    
+
     class TaskEventImageAdmin(admin.StackedInline):
         model = models.TaskEventImageReactionTime
         extra = 1
