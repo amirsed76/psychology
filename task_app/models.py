@@ -49,6 +49,10 @@ class Participant(models.Model):
         questions = ParticipantQuestionAnswer.objects.filter(participant=self)
         return 10 * len(questions) - sum([question.answer for question in questions])
 
+    @property
+    def age(self):
+        return 1401 - self.birth_year
+
 
 class Health(models.Model):
     participant = models.OneToOneField("Participant", null=False, blank=False, on_delete=models.CASCADE)
@@ -118,7 +122,6 @@ class TaskEvent(models.Model):
     def score(self):
         return self.get_score()
 
-
     @property
     def reaction_time(self):
         return self.get_reaction_time_mean()
@@ -168,6 +171,7 @@ class TaskEvent(models.Model):
 
         else:
             return None
+
     @property
     def jalali_next_date(self):
         next_date = self.get_next_date()
@@ -190,7 +194,6 @@ class TaskEvent(models.Model):
     def sanderland_score(self):
         return self.participant.get_questions_score()
 
-
     def __str__(self):
         # date = jdatetime.datetime.fromgregorian(datetime=self.date_time).date()
         # event_count = self.participant.event_count()
@@ -205,6 +208,7 @@ class TaskEvent(models.Model):
         #
         # return result
         return self.id
+
 
 class TaskEventImageReactionTime(models.Model):
     task_event = models.ForeignKey("TaskEvent", null=False, blank=False, on_delete=models.CASCADE)

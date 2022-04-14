@@ -3,6 +3,8 @@ from django.contrib import admin
 
 
 class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ("family_name","name","birth_year","age")
+    ordering = ("birth_year",)
     class HealthAdmin(admin.StackedInline):
         model = models.Health
         extra = 1
