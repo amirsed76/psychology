@@ -207,7 +207,7 @@ class TaskEvent(models.Model):
         #     result += f"** next_date ={next_date.year}-{next_date.month}-{next_date.day}"
         #
         # return result
-        return self.id
+        return str(self.id)
 
 
 class TaskEventImageReactionTime(models.Model):
